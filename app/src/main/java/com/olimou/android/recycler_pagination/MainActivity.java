@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
 				int lI = 20;
 
-				if (lWhat == 4) {
+				if (lWhat == 2) {
 					lI = 15;
 				}
 

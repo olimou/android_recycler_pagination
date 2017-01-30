@@ -111,7 +111,7 @@ public abstract class RecyclerViewPagination<ViewHolder extends RecyclerView.Vie
 			return TYPE_LAST_POST;
 		}
 
-		return super.getItemViewType(position);
+		return -1;
 	}
 
 	public ListType getLastItem() {
