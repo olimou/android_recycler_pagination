@@ -108,7 +108,7 @@ public abstract class RecyclerViewPagination<ViewHolder extends RecyclerView.Vie
 		if (mListItems.get(position).equals(mLoadingItem)) {
 			return TYPE_LOADING;
 		} else if (mListItems.get(position).equals(mLastItem)) {
-			return super.getItemViewType(position);
+			return TYPE_LAST_POST;
 		}
 
 		return super.getItemViewType(position);
