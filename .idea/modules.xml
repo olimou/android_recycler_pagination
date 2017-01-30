@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AndroidAdapterPagination.iml" filepath="$PROJECT_DIR$/AndroidAdapterPagination.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidRecyclerPagination.iml" filepath="$PROJECT_DIR$/AndroidRecyclerPagination.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
     </modules>

@@ -1,6 +1,7 @@
 package com.olimou.android.recycler_pagination;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -11,15 +12,22 @@ import java.util.List;
  * Created by EmersonMoura on 9/2/16.
  */
 
-public class RecyclerViewPagination<ViewHolder extends RecyclerView.ViewHolder, ListType extends Object> extends RecyclerView.Adapter<ViewHolder> {
+public abstract class RecyclerViewPagination<ViewHolder extends RecyclerView.ViewHolder, ListType extends Object> extends RecyclerView.Adapter<ViewHolder> {
 
 	public static final String TAG = RecyclerViewPagination.class.getSimpleName();
-	private final PaginationListener mPaginationListener;
-	protected     List<ListType>     mListItems;
-	protected     boolean            mLoading;
-	protected     int                mPaginationIndex;
-	protected     int                mPaginationSize;
-	private       View               mStatusNull;
+
+	public static final int TYPE_LAST_POST = 1344;
+	public static final int TYPE_LOADING   = 1343;
+	protected List<ListType>     mListItems;
+	protected boolean            mLoading;
+	protected int                mPaginationIndex;
+	protected int                mPaginationSize;
+	private   ListType           mLastItem;
+	private   int                mLastItemLayoutRes;
+	private   ListType           mLoadingItem;
+	private   int                mLoadingItemLayoutRes;
+	private   PaginationListener mPaginationListener;
+	private   View               mStatusNull;
 
 	public RecyclerViewPagination(int _paginationSize, PaginationListener _paginationListener) {
 		mListItems = new ArrayList<>();
@@ -31,9 +39,9 @@ public class RecyclerViewPagination<ViewHolder extends RecyclerView.ViewHolder, 
 	public void addItem(ListType _item) {
 		mListItems.add(_item);
 
-		verifyStatusNull();
-
 		notifyItemInserted(mListItems.indexOf(_item));
+
+		verifyStatusNull();
 	}
 
 	public void addItem(ListType _listType, int _index) {
@@ -43,6 +51,14 @@ public class RecyclerViewPagination<ViewHolder extends RecyclerView.ViewHolder, 
 	}
 
 	public void addList(List<? extends ListType> _listItems) {
+		int lIndex = mListItems.indexOf(mLoadingItem);
+
+		mListItems.remove(mLoadingItem);
+
+		if (lIndex >= 0) {
+			notifyItemRemoved(lIndex);
+		}
+
 		if (_listItems == null) {
 			mPaginationIndex = -1;
 
@@ -52,7 +68,15 @@ public class RecyclerViewPagination<ViewHolder extends RecyclerView.ViewHolder, 
 
 			if (mPaginationSize > _listItems.size()) {
 				mPaginationIndex = -1;
+
+				if (mLastItem != null) {
+					mListItems.add(mLastItem);
+				}
 			} else {
+				if (mLoadingItem != null) {
+					mListItems.add(mLoadingItem);
+				}
+
 				mPaginationIndex += 1;
 			}
 		}
@@ -79,6 +103,21 @@ public class RecyclerViewPagination<ViewHolder extends RecyclerView.ViewHolder, 
 		return mListItems.size();
 	}
 
+	@Override
+	public int getItemViewType(int position) {
+		if (mListItems.get(position).equals(mLoadingItem)) {
+			return TYPE_LOADING;
+		} else if (mListItems.get(position).equals(mLastItem)) {
+			return super.getItemViewType(position);
+		}
+
+		return super.getItemViewType(position);
+	}
+
+	public ListType getLastItem() {
+		return mLastItem;
+	}
+
 	public List<ListType> getListItems() {
 		return mListItems;
 	}
@@ -87,12 +126,24 @@ public class RecyclerViewPagination<ViewHolder extends RecyclerView.ViewHolder, 
 		mListItems = _listItems;
 	}
 
+	public ListType getLoadingItem() {
+		return mLoadingItem;
+	}
+
 	public int getPaginationIndex() {
 		return mPaginationIndex;
 	}
 
 	public void setPaginationIndex(int _paginationIndex) {
 		mPaginationIndex = _paginationIndex;
+	}
+
+	public PaginationListener getPaginationListener() {
+		return mPaginationListener;
+	}
+
+	public void setPaginationListener(PaginationListener _paginationListener) {
+		mPaginationListener = _paginationListener;
 	}
 
 	public int getPaginationSize() {
@@ -132,6 +183,18 @@ public class RecyclerViewPagination<ViewHolder extends RecyclerView.ViewHolder, 
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		LayoutInflater lInflater = LayoutInflater.from(parent.getContext());
+		View lView;
+
+		switch (viewType) {
+			case TYPE_LOADING:
+				lView = lInflater.inflate(mLoadingItemLayoutRes, parent, false);
+				return (ViewHolder) new SimpleViewHolder(lView);
+			case TYPE_LAST_POST:
+				lView = lInflater.inflate(mLastItemLayoutRes, parent, false);
+				return (ViewHolder) new SimpleViewHolder(lView);
+		}
+
 		return null;
 	}
 
@@ -141,6 +204,16 @@ public class RecyclerViewPagination<ViewHolder extends RecyclerView.ViewHolder, 
 		notifyItemRemoved(_index);
 
 		verifyStatusNull();
+	}
+
+	public void setLastItem(ListType _lastItem, int _layoutRes) {
+		mLastItem = _lastItem;
+		mLastItemLayoutRes = _layoutRes;
+	}
+
+	public void setLoadingItem(ListType _loadingItem, int _loadingRes) {
+		mLoadingItem = _loadingItem;
+		mLoadingItemLayoutRes = _loadingRes;
 	}
 
 	public void updateItem(ListType _listType, int _index) {
@@ -153,10 +226,10 @@ public class RecyclerViewPagination<ViewHolder extends RecyclerView.ViewHolder, 
 
 	public void verifyStatusNull() {
 		if (mStatusNull != null) {
-			int lI = minSizeList();
-			int lSize = getListItems().size();
+			int lMinSizeList = minSizeList();
+			int lListItemsSize = getListItems().size();
 
-			if (lSize <= lI) {
+			if (lListItemsSize <= lMinSizeList) {
 				mStatusNull.setVisibility(View.VISIBLE);
 			} else {
 				mStatusNull.setVisibility(View.GONE);
@@ -166,5 +239,12 @@ public class RecyclerViewPagination<ViewHolder extends RecyclerView.ViewHolder, 
 
 	public interface PaginationListener {
 		void onPagination(int index);
+	}
+
+	class SimpleViewHolder extends RecyclerView.ViewHolder {
+
+		public SimpleViewHolder(View itemView) {
+			super(itemView);
+		}
 	}
 }
