@@ -1,7 +1,7 @@
 package com.olimou.android.recycler_pagination;
 
-import android.content.Context;
-import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +16,15 @@ import java.util.List;
 
 public abstract class RecyclerViewPagination<ViewHolder extends RecyclerView.ViewHolder, ListType extends Object> extends RecyclerView.Adapter<ViewHolder> {
 
-	public static final String INTENT_ACTION_LOAD_MORE  = "com.olimou.android.recycler_pagination.load_more";
-	public static final String INTENT_EXTRA_PAGE_NUMBER = "com.olimou.android.recycler_pagination.page_number";
+	public static final String TAG = RecyclerViewPagination.class.getSimpleName();
 
-	public static final String TAG            = RecyclerViewPagination.class.getSimpleName();
-	public static final int    TYPE_LAST_POST = 1344;
-	public static final int    TYPE_LOADING   = 1343;
-	private final Context        mContext;
+	public static final int TYPE_LAST_POST = 1344;
+	public static final int TYPE_LOADING   = 1343;
+
 	protected List<ListType>     mListItems;
 	protected boolean            mLoading;
 	protected int                mPaginationIndex;
+	protected PaginationListener mPaginationListener;
 	protected int                mPaginationSize;
 	private   ListType           mLastItem;
 	private   int                mLastItemLayoutRes;
@@ -33,11 +32,11 @@ public abstract class RecyclerViewPagination<ViewHolder extends RecyclerView.Vie
 	private   int                mLoadingItemLayoutRes;
 	private   View               mStatusNull;
 
-	public RecyclerViewPagination(Context _context, int _paginationSize) {
-		mContext = _context;
+	public RecyclerViewPagination(int _paginationSize, PaginationListener _paginationListener) {
 		mListItems = new ArrayList<>();
 		mPaginationSize = _paginationSize;
 		mPaginationIndex = 1;
+		mPaginationListener = _paginationListener;
 	}
 
 	public void addItem(ListType _item) {
@@ -102,10 +101,6 @@ public abstract class RecyclerViewPagination<ViewHolder extends RecyclerView.Vie
 		addList(_listItems);
 	}
 
-	public Context getContext() {
-		return mContext;
-	}
-
 	@Override
 	public int getItemCount() {
 		return mListItems.size();
@@ -164,11 +159,14 @@ public abstract class RecyclerViewPagination<ViewHolder extends RecyclerView.Vie
 		mStatusNull.setVisibility(View.GONE);
 	}
 
-	public void loadMore(int _i) {
-		Intent lIntent = new Intent(INTENT_ACTION_LOAD_MORE);
-		lIntent.putExtra(INTENT_EXTRA_PAGE_NUMBER, _i);
-
-		getContext().sendBroadcast(lIntent);
+	public void loadMore(final int _i) {
+		new Handler(new Handler.Callback() {
+			@Override
+			public boolean handleMessage(Message msg) {
+				mPaginationListener.load(_i);
+				return true;
+			}
+		}).sendEmptyMessage(0);
 
 		mLoading = true;
 	}
@@ -240,8 +238,11 @@ public abstract class RecyclerViewPagination<ViewHolder extends RecyclerView.Vie
 		}
 	}
 
-	class SimpleViewHolder extends RecyclerView.ViewHolder {
+	public interface PaginationListener {
+		void load(int _page);
+	}
 
+	class SimpleViewHolder extends RecyclerView.ViewHolder {
 		public SimpleViewHolder(View itemView) {
 			super(itemView);
 		}

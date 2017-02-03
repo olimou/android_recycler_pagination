@@ -9,9 +9,9 @@ import android.view.ViewGroup;
  * Created by EmersonMoura on 30/01/17.
  */
 
-public class ExamplerPagination extends RecyclerViewPagination<RecyclerView.ViewHolder, String> {
+public class ExamplePagination extends RecyclerViewPagination<RecyclerView.ViewHolder, String> {
 
-	public ExamplerPagination(int _paginationSize, PaginationListener _paginationListener) {
+	public ExamplePagination(int _paginationSize, PaginationListener _paginationListener) {
 		super(_paginationSize, _paginationListener);
 	}
 

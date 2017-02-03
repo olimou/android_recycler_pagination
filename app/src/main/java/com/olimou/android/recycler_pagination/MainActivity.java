@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
 	private Handler            mHandler;
-	private ExamplerPagination mPagination;
+	private ExamplePagination  mPagination;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 
 	private void getItens(int _index) {
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 			});
 		}
 
-		mHandler.sendEmptyMessageDelayed(_index, 5000);
+		mHandler.sendEmptyMessageDelayed(_index, 100);
 	}
 
 	@Override
@@ -38,10 +38,10 @@ public class MainActivity extends AppCompatActivity {
 
 		RecyclerView lRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-		mPagination = new ExamplerPagination(20, new RecyclerViewPagination.PaginationListener() {
+		mPagination = new ExamplePagination(4, new RecyclerViewPagination.PaginationListener() {
 			@Override
-			public void onPagination(int index) {
-				getItens(index);
+			public void load(int _page) {
+				getItens(_page);
 			}
 		});
 
@@ -62,10 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
 				ArrayList<String> lStrings = new ArrayList<>();
 
-				int lI = 20;
+				int lI = 4;
 
-				if (lWhat == 2) {
-					lI = 15;
+				if (lWhat == 5) {
+					lI = 2;
 				}
 
 				for (int i = 0; i < lI; i++) {
