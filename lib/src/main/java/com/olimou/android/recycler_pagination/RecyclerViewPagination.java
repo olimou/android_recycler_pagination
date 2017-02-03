@@ -16,7 +16,9 @@ import java.util.List;
 
 public abstract class RecyclerViewPagination<ViewHolder extends RecyclerView.ViewHolder, ListType extends Object> extends RecyclerView.Adapter<ViewHolder> {
 
-	public static final String REFRESH_ACTION = "com.olimou.android.recycler_pagination.refresh";
+	public static final String INTENT_ACTION_LOAD_MORE  = "com.olimou.android.recycler_pagination.load_more";
+	public static final String INTENT_EXTRA_PAGE_NUMBER = "com.olimou.android.recycler_pagination.page_number";
+
 	public static final String TAG            = RecyclerViewPagination.class.getSimpleName();
 	public static final int    TYPE_LAST_POST = 1344;
 	public static final int    TYPE_LOADING   = 1343;
@@ -163,7 +165,10 @@ public abstract class RecyclerViewPagination<ViewHolder extends RecyclerView.Vie
 	}
 
 	public void loadMore(int _i) {
-		getContext().sendBroadcast(new Intent(REFRESH_ACTION));
+		Intent lIntent = new Intent(INTENT_ACTION_LOAD_MORE);
+		lIntent.putExtra(INTENT_EXTRA_PAGE_NUMBER, _i);
+
+		getContext().sendBroadcast(lIntent);
 
 		mLoading = true;
 	}
