@@ -40,33 +40,31 @@ public abstract class RecyclerViewPagination<ViewHolder extends RecyclerView.Vie
 	}
 
 	public void addItem(ListType _item) {
-		if (mLastItem != null) {
+		addItem(_item, null);
+	}
+
+	public void addItem(ListType _item, Integer _index) {
+		if (mLastItem != null && mListItems.contains(mLastItem)) {
 			mListItems.remove(mLastItem);
-		}
 
-		mListItems.add(_item);
+			if (_index != null) {
+				mListItems.add(_index, _item);
+			} else {
+				mListItems.add(_item);
+			}
 
-		if (mLastItem != null) {
 			mListItems.add(mLastItem);
+		} else {
+			if (_index != null) {
+				mListItems.add(_index, _item);
+			} else {
+				mListItems.add(_item);
+			}
 		}
 
 		notifyItemInserted(mListItems.indexOf(_item));
 
 		verifyStatusNull();
-	}
-
-	public void addItem(ListType _listType, int _index) {
-		if (mLastItem != null) {
-			mListItems.remove(mLastItem);
-		}
-
-		mListItems.add(_index, _listType);
-
-		if (mLastItem != null) {
-			mListItems.add(mLastItem);
-		}
-
-		notifyItemInserted(_index);
 	}
 
 	public void addList(List<? extends ListType> _listItems) {
