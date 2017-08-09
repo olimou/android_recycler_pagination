@@ -197,7 +197,7 @@ public abstract class RecyclerViewPagination<ViewHolder extends RecyclerView.Vie
 
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
-		if (getItemCount() > getPaginationSize() && position == getItemCount() - 1 && mPaginationIndex >= 0 && !mLoading) {
+		if (getItemCount() >= getPaginationSize() && position == getItemCount() - 1 && mPaginationIndex >= 0 && !mLoading) {
 			loadMore(mPaginationIndex);
 		}
 	}
