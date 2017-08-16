@@ -8,9 +8,7 @@ Tipos de paginação suportada:
 
 ## Requisitos
 
-RecyclerPagination pode ser incluído em qualquer aplicação Android.
-
-RecyclerPagination suporte Android API > 14
+RecyclerPagination pode ser incluído em qualquer aplicação Android com API > 14
 
 ## Usando RecyclerPagination em sua aplicação
 
