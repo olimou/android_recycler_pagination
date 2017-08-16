@@ -1,7 +1,5 @@
 # Android RecyclerPagination
 
-[![Build Status](https://circleci.com/gh/facebook/fresco.svg?style=shield)](htt*__*ps://circleci.com/gh/facebook/fresco)
-
 Extensão do RecyclerView para trabalhar com auto paginação ao chegar ao final de uma lista 
 
 Tipos de paginação suportada:
