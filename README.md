@@ -28,11 +28,11 @@ No build.gradle do módulo
 compile 'com.github.olimou:android_recycler_pagination:CHECK_VERSION'
 ```
 
-O PaginationListener é uma a interface será chamada com o index da página que será chamada no parâmetro
+O PaginationListener é uma a interface é chamado com o index da página que será chamada no parâmetro
 ```java
-	public interface PaginationListener {
-		void load(int _page);
-	}
+public interface PaginationListener {
+    void load(int _page);
+}
 ```
 
 Em sua aplicação Java
