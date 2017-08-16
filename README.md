@@ -3,7 +3,7 @@
 Extensão do RecyclerView para trabalhar com auto paginação ao chegar ao final de uma lista 
 
 Tipos de paginação suportada:
-* paginação com increment o de inteiro
+* paginação com incremento de inteiro
 * paginação com token string (em desenvolvimento)
 
 ## Requisitos
