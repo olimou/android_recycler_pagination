@@ -38,11 +38,6 @@ public class ExamplePagination extends RecyclerViewPagination<RecyclerView.ViewH
 	}
 
 	@Override
-	public int getItemViewType(int position) {
-		return super.getItemViewType(position);
-	}
-
-	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		//Adicionar super ao onBindViewHolder 
 		super.onBindViewHolder(holder, position);
