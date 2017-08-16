@@ -28,6 +28,13 @@ No build.gradle do módulo
 compile 'com.github.olimou:android_recycler_pagination:CHECK_VERSION'
 ```
 
+O PaginationListener é uma a interface será chamada com o index da página que será chamada no parâmetro
+```java
+	public interface PaginationListener {
+		void load(int _page);
+	}
+```
+
 Em sua aplicação Java
 
 ```java
@@ -50,9 +57,9 @@ public class ExamplePagination extends RecyclerViewPagination<RecyclerView.ViewH
 Em sua aplicação Kotlin
 ```kotlin
 class ExamplePagination(_paginationSize: Int, _paginationListener: RecyclerViewPagination.PaginationListener) 
-            : RecyclerViewPagination<NotifyRecyclerViewAdapter.NotifyHolder, NotificationsData>(_paginationSize, _paginationListener) {
+            : RecyclerViewPagination<T, T>(_paginationSize, _paginationListener) {
 
-    override fun onBindViewHolder(holder: NotifyHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         //Adicionar super ao onBindViewHolder 
         super.onBindViewHolder(holder, position)
         
